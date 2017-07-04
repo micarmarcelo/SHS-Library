@@ -1,0 +1,41 @@
+nav{
+    background-color: #00330e;
+    height: 100px !important;
+}
+
+.logo-container{
+    width: auto;
+    height: inherit;
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 5px !important;
+    padding-left: 20px;
+
+}
+
+#dlsu-logo{
+    width: 80px;
+    height: 80px;
+}
+
+div.dlsu-text{
+    width: auto;
+    height: auto;
+    margin-left: 20px;
+}
+
+span{
+    display: block;
+    line-height:22px;
+    margin: 10px 0;
+}
+
+#nav-mobile{
+    padding: 20px;
+    list-style-type: none;
+    display:inline-block;
+}
+
+.container{
+    padding-top: 30px;
+}
