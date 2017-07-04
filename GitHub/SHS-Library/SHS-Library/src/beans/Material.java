@@ -1,18 +1,31 @@
 package beans;
 
 public class Material {	
+	public static final String TABLE_NAME = "materials";
+	public static final String COLUMN_LOCATION = "location";
+	public static final String COLUMN_TITLE = "title";
+	public static final String COLUMN_AUTHOR = "author";
+	public static final String COLUMN_PUBLISHER = "publisher";
+	public static final String COLUMN_YEAR = "year";
+	public static final String COLUMN_TAGS = "tags";
+	public static final String COLUMN_STATUS = "status";
+	public static final String COLUMN_AVAILDATE = "availabilityDate";
+	public static final String COLUMN_RETURNDATE = "returnDate";
+	public static final String COLUMN_RESERVEDATE = "reservationDate";
+	
 	private String materialID;
 	private String title;
 	private String author;
 	private String publisher;
 	private String year;
 	private String tags;
+	private String status;
 	private String location;
 	private String availableDate;
 	private String returnDate;
 	private String reservationDate;
 	
-	public Material(String materialID, String title, String author, String publisher, String year, String tags, String location) {
+	public Material(String materialID, String title, String author, String publisher, String year, String tags, String location, String status) {
 		super();
 		this.materialID = materialID;
 		this.title = title;
@@ -21,6 +34,7 @@ public class Material {
 		this.year = year;
 		this.tags = tags;
 		this.location = location;
+		this.status = status;
 	}
 	
 	public Material(){}
@@ -32,6 +46,14 @@ public class Material {
 
 	public void setMaterialID(String materialID) {
 		this.materialID = materialID;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String getTitle() {
