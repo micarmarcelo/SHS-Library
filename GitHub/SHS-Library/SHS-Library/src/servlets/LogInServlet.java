@@ -2,6 +2,7 @@ package servlets;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,8 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
+import beans.Material;
 import beans.User;
+import services.MaterialService;
 import services.UsersService;
 
 /**
@@ -60,7 +62,7 @@ public class LogInServlet extends HttpServlet {
 				
 				//put the user's info into session's attributes
 				User user = UsersService.getUser(email);
-				System.out.println(user.getUserID());
+				//System.out.println(user.getUserID());
 				if(session.getAttribute("email") == null){
 					session.setAttribute("email", email);
 					
@@ -73,7 +75,13 @@ public class LogInServlet extends HttpServlet {
 				
 				System.out.println("Log-In::SUCCESS");
 				//session.setAttribute("getAlert", "login");
-				request.getRequestDispatcher("main.html").forward(request, response);
+				
+				ArrayList<Material> material = MaterialService.getAllMaterials();
+				
+				request.setAttribute("material", material);
+
+				
+				request.getRequestDispatcher("main.jsp").forward(request, response);
 			}
 			else{
 				System.out.println("Log-In::FAILED");

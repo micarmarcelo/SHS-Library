@@ -14,6 +14,7 @@ public class UsersService {
 	//this is a service class that contains
 	//all the database helper methods for "users" Table
 	
+	public static final String USERID = "id_user";
 	public static final String FIRST_NAME = "first_name";
 	public static final String LAST_NAME = "last_name";
 	public static final String MIDDLE_INITIAL = "middle_initial";
@@ -151,6 +152,7 @@ public class UsersService {
 						r.getString(EMAIL_ADDRESS),r.getString(ES_NUMBER),r.getString(BIRTHDAY),secquestions.get(0),
 						secquestions.get(1),r.getString(ANSWERQ1),r.getString(ANSWERQ2),r.getString(TYPE));
 				
+				r.getInt(USERID);
 				String reviewss = "SELECT * FROM reviews WHERE reviewed_by = '" + u.getEsNumber() + "'";
 				PreparedStatement reviewquery = con.prepareStatement(reviewss);
 				ResultSet reviewresults = reviewquery.executeQuery();

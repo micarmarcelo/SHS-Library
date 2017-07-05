@@ -172,6 +172,41 @@ public class MaterialService {
 		
 	}
 
+	public static boolean reserveMaterial(int materialID) throws SQLException{
+		boolean isUpdateSuccess = false;
+				
+				String newStatus = "Not Available";
+				
+				String sql = "UPDATE "+ Material.TABLE_NAME + " SET " +
+						Material.COLUMN_STATUS + "=?"+ " WHERE " +
+						Material.COLUMN_MATERIALID + "=? ";
+				
+				Connection conn = DBPool1.getInstance().getConnection();
+				PreparedStatement pstat = null;
+				
+				try {
+					pstat = conn.prepareStatement(sql);
+					pstat.setString(1, newStatus);		
+					pstat.setInt(2, materialID);
+					
+					pstat.executeUpdate();
+					
+					System.out.println("UPDATE IN DB::SUCCESS!");
+					isUpdateSuccess = true;
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}finally{
+					try {
+						pstat.close();
+						conn.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				return isUpdateSuccess;
+	}
 	public static boolean deleteMaterial(int materialID) throws SQLException{
 		boolean isDeleteSuccess = false;
 		
@@ -204,6 +239,52 @@ public class MaterialService {
 		return isDeleteSuccess;
 		
 	}
+	
+	public static ArrayList<Material> getAllMaterials() throws SQLException{
+		ArrayList<Material> materials = new ArrayList<Material>();
+		
+		String sql = "SELECT * FROM " + Material.TABLE_NAME + " LIMIT 10";
+		
+		Connection conn = DBPool1.getInstance().getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()){
+				Material material = new Material();
+				material.setTitle(rs.getString(Material.COLUMN_TITLE));
+				material.setLocation(rs.getString(Material.COLUMN_LOCATION));
+				material.setAuthor(rs.getString(Material.COLUMN_AUTHOR));
+				material.setPublisher(rs.getString(Material.COLUMN_PUBLISHER));
+				material.setYear(rs.getString(Material.COLUMN_YEAR));
+				material.setTags(Material.COLUMN_TAGS);
+				material.setStatus(Material.COLUMN_STATUS);
+				material.setAvailableDate(Material.COLUMN_AVAILDATE);
+				material.setReturnDate(Material.COLUMN_RETURNDATE);
+				material.setReservationDate(Material.COLUMN_RESERVEDATE);
+	
+				materials.add(material);
+			}
+			System.out.println("VIEW-BOOKMAT-SERVICE::SUCCESS");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			try {
+				pstmt.close();
+				conn.close();
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return materials;
+	}
+
 //	SELECT * FROM librarysystem.materials
 //	WHERE tags = "Magazine";
 	public static ArrayList<Material> getBookMaterial() throws SQLException{

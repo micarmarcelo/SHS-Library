@@ -59,19 +59,19 @@ public class RegisterServlet extends HttpServlet {
 			user.setAnswerQ2(request.getParameter(User.COLUMN_ANSQ2));
 
 			UsersService.registerUser(user);
-//			User newUser = UsersService.getUser(user.getEmailAddress());
-//			
-//			
-//			//make a session
-//			HttpSession session = request.getSession();
-//			session.setAttribute("email", newUser.getEmailAddress());
-//			session.setAttribute("es_number", newUser.getEsNumber());
-//			session.setAttribute("id_user", newUser.getUserID());
-//			session.setAttribute("last_name", newUser.getLastName());
-//			session.setAttribute("first_name", newUser.getFirstName());
-//			session.setAttribute("middle_initial", newUser.getMiddleInitial());
-//			session.setAttribute("userType", newUser.getType());
-//			session.setAttribute("birthday", newUser.getBirthday());
+			User newUser = UsersService.getUser(user.getEmailAddress());
+			
+			
+			//make a session
+			HttpSession session = request.getSession();
+			session.setAttribute("email", newUser.getEmailAddress());
+			session.setAttribute("es_number", newUser.getEsNumber());
+			session.setAttribute("id_user", newUser.getUserID());
+			session.setAttribute("last_name", newUser.getLastName());
+			session.setAttribute("first_name", newUser.getFirstName());
+			session.setAttribute("middle_initial", newUser.getMiddleInitial());
+			session.setAttribute("userType", newUser.getType());
+			session.setAttribute("birthday", newUser.getBirthday());
 			
 			System.out.println("SIGN-UP::SUCCESS");
 			

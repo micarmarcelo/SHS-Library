@@ -43,11 +43,13 @@ a:hover{
 
 .btn-login{
     background-color: #00330e;
+    text-decoration: none;
 }
 
 .btn-register{
     background-color: white;
     color: #00330e;
+    text-decoration: none;
 }
 
 #dlsu-logo{
