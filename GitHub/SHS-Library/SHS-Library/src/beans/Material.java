@@ -2,6 +2,7 @@ package beans;
 
 public class Material {	
 	public static final String TABLE_NAME = "materials";
+	public static final String COLUMN_MATERIALID = "id_materials";
 	public static final String COLUMN_LOCATION = "location";
 	public static final String COLUMN_TITLE = "title";
 	public static final String COLUMN_AUTHOR = "author";

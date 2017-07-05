@@ -181,5 +181,71 @@ public class UsersService {
 		return u;
 	}
 	
-
+	
+	public static boolean updateUser(User user) throws SQLException{
+		boolean isUpdateSuccess = false;
+		//first_name, last_name, middle_initial, es_number, password, email, id_question1, id_question2, answer_question1, answer_question2, birthday
+		/** Get all new info of the user**/
+		String newFirstName = user.getFirstName();
+		String newLastName = user.getLastName();
+		String newInitial = user.getMiddleInitial();
+		String newESNum = user.getEsNumber();
+		String newPassword = user.getPassword();
+		String newEmail = user.getEmailAddress();
+		int newIDQ1 = user.getSecurityQ1();
+		int newIDQ2 = user.getSecurityQ2();
+		String newA1 = user.getAnswerQ1();
+		String newA2 = user.getAnswerQ2();
+		String newBirthday = user.getBirthday();
+		
+		String sql = "UPDATE "+ User.TABLE_NAME + " SET " + User.COLUMN_FIRSTNAME + "=?, " +
+				User.COLUMN_LASTNAME + "=?, " +
+				User.COLUMN_MIDDLEINITIAL + "=?, " + 
+				User.COLUMN_ESNUMBER + "=?, " + 
+				User.COLUMN_PASSWORD + "=?, " +
+				User.COLUMN_EMAILADDRESS + "=?, "+
+				User.COLUMN_SECQ1 + "=?, " +
+				User.COLUMN_SECQ2 + "=?, " +
+				User.COLUMN_ANSQ1 + "=?, " +
+				User.COLUMN_ANSQ2 + "=?, " +
+				User.COLUMN_BIRTHDAY + "=?"+ " WHERE " +
+				User.COLUMN_USERID + "=? ";
+		
+		Connection conn = DBPool1.getInstance().getConnection();
+		PreparedStatement pstat = null;
+		
+		try {
+			pstat = conn.prepareStatement(sql);
+			pstat.setString(1, newFirstName);
+			pstat.setString(2, newLastName);
+			pstat.setString(3, newInitial);
+			pstat.setString(4, newESNum);
+			pstat.setString(5, newPassword);
+			pstat.setString(6, newEmail);
+			pstat.setInt(7, newIDQ1);
+			pstat.setInt(8,  newIDQ2);
+			pstat.setString(9, newA1);
+			pstat.setString(10, newA2);
+			pstat.setString(11, newBirthday);
+			pstat.setString(12, user.getUserID());
+			
+			pstat.executeUpdate();
+			
+			System.out.println("UPDATE IN DB::SUCCESS!");
+			isUpdateSuccess = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			try {
+				pstat.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return isUpdateSuccess;
+		
+	}
 }

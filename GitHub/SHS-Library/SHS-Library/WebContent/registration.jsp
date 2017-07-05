@@ -52,7 +52,7 @@
                 
                 <div class="row">
                     <div class="col s6">
-                        <input placeholder="Birthdate" id="birthday" name="birthday" type="date" class="datepicker">
+                        <input placeholder="Birthdate" id="birthday" name="birthday" type="date" class="datepicker" data-date-format="mm/dd/yyyy">
                     </div>
                     <div class="col s6">
                         <div class="row" name="user_type" id="user_type">
