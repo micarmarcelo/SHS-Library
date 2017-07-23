@@ -116,72 +116,215 @@ public class UsersService {
 		return isValid;
 	}
 	
-	/****** PUBIES WERRRK 
-	 * @throws SQLException ******/
-	public static User getUser(String emailAdd) throws SQLException{
-		String sql = "SELECT * FROM user WHERE email = ?;";
-		String question = "SELECT * FROM questions WHERE id_questions = ? OR id_questions = ?;";
+	public static boolean validateEmailIDnum(String email_idnum) throws SQLException{
+		boolean isValid = false;
+		int userid = 0;
+		
+		/*SELECT *
+		 * FROM users
+		 * WHERE username = ? OR idnum = ?
+		 */
+		
+		String sql = "SELECT " + User.COLUMN_USERID + " FROM " + User.TABLE_NAME + " WHERE " 
+				+ User.COLUMN_EMAILADDRESS + " = ? OR " + User.COLUMN_ESNUMBER + " = ?";
+		
+		Connection conn = DBPool1.getInstance().getConnection();
 		PreparedStatement pstmt = null;
-		PreparedStatement questions = null;
-		Connection con = DBPool1.getInstance().getConnection();
-		ResultSet r = null;
-		ResultSet q = null;
-		User u = null;
+		ResultSet rs = null;
+		
 		try {
-			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, emailAdd);
-			r = pstmt.executeQuery();
-			ArrayList<Integer> secquestions = new ArrayList<Integer>();
-			ArrayList<Review> reviews = new ArrayList<Review>();
-			ArrayList<Integer> materials = new ArrayList<Integer>();
-			int[] ids = new int[2];
-			while(r.next()){
-				questions = con.prepareStatement(question);
-				questions.setString(1, r.getString(SECURITYIDQ1));
-				questions.setString(2, r.getString(SECURITYIDQ2));
-				q = questions.executeQuery();
-				int i = 0;
-				while(q.next()){
-					int temp = q.getInt(2);
-					secquestions.add(temp);
-					ids[i]= q.getInt(1);
-					i++;
-				}
-				u = new User(
-						r.getString(FIRST_NAME),r.getString(MIDDLE_INITIAL),r.getString(LAST_NAME),r.getString(PASSWORD),
-						r.getString(EMAIL_ADDRESS),r.getString(ES_NUMBER),r.getString(BIRTHDAY),secquestions.get(0),
-						secquestions.get(1),r.getString(ANSWERQ1),r.getString(ANSWERQ2),r.getString(TYPE));
-				
-				r.getInt(USERID);
-				String reviewss = "SELECT * FROM reviews WHERE reviewed_by = '" + u.getEsNumber() + "'";
-				PreparedStatement reviewquery = con.prepareStatement(reviewss);
-				ResultSet reviewresults = reviewquery.executeQuery();
-				while(reviewresults.next()){
-					Review result = new Review(
-							reviewresults.getString(REVIEWED_BY),
-							reviewresults.getInt(RATING),
-							reviewresults.getString(MESSAGE),
-							reviewresults.getInt(MATERIAL_ID),
-							reviewresults.getString(REVIEW_DATE));
-					reviews.add(result);
-				}
-//				String[] history = r.getString(BORROW_HISTORY).split(",");
-//				for(int j = 0; j < history.length; j++){
-//					int a = Integer.parseInt(history[j]);
-//					materials.add(a);
-//				}
-//				u.setMaterialHistory(materials);
-//				u.setReviews(reviews);
-//				u.setSecurityQ1ID(ids[0]);
-//				u.setSecurityQ2ID(ids[1]);
-//				System.out.println(u.getBirthday());
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, email_idnum);
+			pstmt.setString(2, email_idnum);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()){
+				userid = rs.getInt(User.COLUMN_USERID);
+			}
+			
+			if(userid != 0){
+				isValid = true;
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			try {
+				pstmt.close();
+				conn.close();
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		return u;
+		
+		return isValid;
 	}
+	
+	public static User getUserByEmailIDnum(String email_idnum) throws SQLException{
+		
+		/*SELECT *
+		 * FROM users
+		 * WHERE username = ? OR idnum = ?
+		 */
+		
+		User user = null;
+		
+		String sql = "SELECT * FROM " + User.TABLE_NAME + " WHERE " 
+				+ User.COLUMN_EMAILADDRESS + " = ? OR " + User.COLUMN_ESNUMBER + " = ?";
+		
+		Connection conn = DBPool1.getInstance().getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, email_idnum);
+			pstmt.setString(2, email_idnum);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()){				
+				user = new User();
+				user.setUserID(rs.getString(User.COLUMN_USERID));
+				user.setEsNumber(rs.getString(User.COLUMN_ESNUMBER));
+				user.setPassword(rs.getString(User.COLUMN_PASSWORD));
+				user.setLastName(rs.getString(User.COLUMN_LASTNAME));
+				user.setMiddleInitial(rs.getString(User.COLUMN_MIDDLEINITIAL));
+				user.setFirstName(rs.getString(User.COLUMN_FIRSTNAME));
+				user.setEmailAddress(rs.getString(User.COLUMN_EMAILADDRESS));
+				user.setType(rs.getString(User.COLUMN_USERTYPE));
+				
+//				user.setActive(rs.getInt(RegisteredUser.COLUMN_ACTIVE));
+//				user.setBirthday(rs.getString(RegisteredUser.COLUMN_BIRTHDAY));
+//				user.setSecretquestion(rs.getString(RegisteredUser.COLUMN_SECRETQUESTION));
+//				user.setSecretquestion(rs.getString(RegisteredUser.COLUMN_SECRETANSWER));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			try {
+				pstmt.close();
+				conn.close();
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return user;
+	}
+	
+	public static User getUser(String email) throws SQLException{
+	User user = null;
+	
+	String sql = "SELECT * FROM " + User.TABLE_NAME + " WHERE " + User.COLUMN_EMAILADDRESS
+				 + " = '" + email + "'";
+	
+	Connection conn = DBPool1.getInstance().getConnection();
+	PreparedStatement pstat = null;
+	ResultSet rs = null;
+	
+	try {
+		pstat = conn.prepareStatement(sql);
+		rs = pstat.executeQuery();
+		
+		while(rs.next()){
+			user = new User();
+			user.setUserID(rs.getString(User.COLUMN_USERID));
+			user.setPassword(rs.getString(User.COLUMN_PASSWORD));
+			user.setLastName(rs.getString(User.COLUMN_LASTNAME));
+			user.setFirstName(rs.getString(User.COLUMN_FIRSTNAME));
+			user.setEmailAddress(rs.getString(User.COLUMN_EMAILADDRESS));
+			user.setType(rs.getString(User.COLUMN_USERTYPE));
+		}
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}finally{
+		try {
+			pstat.close();
+			conn.close();
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	return user;
+}
+	/****** PUBIES WERRRK 
+//	 * @throws SQLException ******/
+//	public static User getUser(String emailAdd) throws SQLException{
+//		String sql = "SELECT * FROM user WHERE email = ?;";
+//		String question = "SELECT * FROM questions WHERE id_questions = ? OR id_questions = ?;";
+//		PreparedStatement pstmt = null;
+//		PreparedStatement questions = null;
+//		Connection con = DBPool1.getInstance().getConnection();
+//		ResultSet r = null;
+//		ResultSet q = null;
+//		User u = null;
+//		try {
+//			pstmt = con.prepareStatement(sql);
+//			pstmt.setString(1, emailAdd);
+//			r = pstmt.executeQuery();
+//			ArrayList<Integer> secquestions = new ArrayList<Integer>();
+//			ArrayList<Review> reviews = new ArrayList<Review>();
+//			ArrayList<Integer> materials = new ArrayList<Integer>();
+//			int[] ids = new int[2];
+//			while(r.next()){
+//				questions = con.prepareStatement(question);
+//				questions.setString(1, r.getString(SECURITYIDQ1));
+//				questions.setString(2, r.getString(SECURITYIDQ2));
+//				q = questions.executeQuery();
+//				int i = 0;
+//				while(q.next()){
+//					int temp = q.getInt(2);
+//					secquestions.add(temp);
+//					ids[i]= q.getInt(1);
+//					i++;
+//				}
+//				u = new User(
+//						r.getString(FIRST_NAME),r.getString(MIDDLE_INITIAL),r.getString(LAST_NAME),r.getString(PASSWORD),
+//						r.getString(EMAIL_ADDRESS),r.getString(ES_NUMBER),r.getString(BIRTHDAY),secquestions.get(0),
+//						secquestions.get(1),r.getString(ANSWERQ1),r.getString(ANSWERQ2),r.getString(TYPE));
+//				
+//				r.getInt(USERID);
+//				String reviewss = "SELECT * FROM reviews WHERE reviewed_by = '" + u.getEsNumber() + "'";
+//				PreparedStatement reviewquery = con.prepareStatement(reviewss);
+//				ResultSet reviewresults = reviewquery.executeQuery();
+//				while(reviewresults.next()){
+//					Review result = new Review(
+//							reviewresults.getString(REVIEWED_BY),
+//							reviewresults.getInt(RATING),
+//							reviewresults.getString(MESSAGE),
+//							reviewresults.getInt(MATERIAL_ID),
+//							reviewresults.getString(REVIEW_DATE));
+//					reviews.add(result);
+//				}
+////				String[] history = r.getString(BORROW_HISTORY).split(",");
+////				for(int j = 0; j < history.length; j++){
+////					int a = Integer.parseInt(history[j]);
+////					materials.add(a);
+////				}
+////				u.setMaterialHistory(materials);
+////				u.setReviews(reviews);
+////				u.setSecurityQ1ID(ids[0]);
+////				u.setSecurityQ2ID(ids[1]);
+////				System.out.println(u.getBirthday());
+//			}
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return u;
+//	}
 	
 	
 	public static boolean updateUser(User user) throws SQLException{
@@ -249,5 +392,42 @@ public class UsersService {
 		}
 		return isUpdateSuccess;
 		
+	}
+	
+	public static String getUsersFullName(String userID) throws SQLException{
+		String fullName = "";
+		
+		String sql = "SELECT "+ User.COLUMN_FIRSTNAME + ", " + User.COLUMN_LASTNAME 
+				 	+ " FROM " + User.TABLE_NAME + " WHERE " + User.COLUMN_USERID  + " = ?";
+		
+		Connection conn = DBPool1.getInstance().getConnection();
+		PreparedStatement pstat = null;
+		ResultSet rs = null;
+
+		try {
+			pstat = conn.prepareStatement(sql);
+			pstat.setString(1, userID);
+			rs = pstat.executeQuery();
+			
+			while(rs.next()){
+				fullName += rs.getString(User.COLUMN_FIRSTNAME) + " ";
+				fullName += rs.getString(User.COLUMN_LASTNAME);
+			}
+			System.out.println("GOT USER'S FULLNAME::SUCCESS");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			try {
+				pstat.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return fullName;
 	}
 }

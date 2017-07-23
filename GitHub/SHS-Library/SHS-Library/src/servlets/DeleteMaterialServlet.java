@@ -9,22 +9,21 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import beans.Material;
 import services.MaterialService;
 
 /**
- * Servlet implementation class ReserveServlet
+ * Servlet implementation class DeleteMaterialServlet
  */
-@WebServlet("/ReserveServlet")
-public class ReserveServlet extends HttpServlet {
+@WebServlet("/DeleteMaterialServlet")
+public class DeleteMaterialServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ReserveServlet() {
+    public DeleteMaterialServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -41,20 +40,18 @@ public class ReserveServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Get Event's Info
-				System.out.println(request.getParameter(Material.COLUMN_MATERIALID));
-				
-				int materialID = Integer.parseInt(request.getParameter("materialID"));
-				
-				try {
-					MaterialService.reserveMaterial(materialID);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				
-				request.getRequestDispatcher("main.jsp").forward(request, response);
+		int materialID = Integer.parseInt(request.getParameter("materialID"));
+		try {
+			MaterialService.deleteMaterial(materialID);
+			
+			ArrayList<Material> material = MaterialService.getAllMaterials();
+			request.setAttribute("material", material);
+			request.getRequestDispatcher("library.jsp").forward(request,response);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 	}
 

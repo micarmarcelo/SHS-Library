@@ -108,3 +108,32 @@ a.reserve.disabled:hover{
 .modal{
     width: 400px;
 }
+
+/*FOR LIBRARY.HTML*/
+.edit-icon{
+    position: relative;
+    right: -170%;
+}
+
+.delete-icon{
+    position: relative;
+    right: -120%;
+}
+
+.modal.edit{
+    width: 800px;
+}
+
+.browser-default.status{
+    background-color: white;
+    color: #00330e;
+}
+
+.btn-add{
+    position: fixed;
+    left: 1425px;
+    top: 650px;
+}
+.modal#add{
+    width: 800px;
+}

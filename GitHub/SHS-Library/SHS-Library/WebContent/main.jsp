@@ -90,6 +90,7 @@
                             <li><a href="login.html">Logout</a></li>
                         </ul> 
                     </li>
+                    <input type = "hidden" name="userType" value="<%= session.getAttribute("type") %>">
                     </form>
                 </ul>
             </div>
@@ -103,23 +104,23 @@
                 <p>Categories: </p>
             </div>
             <div class="col s4">
-                <form action="#" name="filter-form">
+                <form action="FilterServlet" method="POST" name="filter-form">
                     <div class="row">
                         <div class="col s4">
                             <p>
-                              <input type="checkbox" id="books" />
+                              <input name="categ" type="checkbox" id="books" />
                               <label for="books">Books</label>
                             </p>
                         </div>
                         <div class="col s4">
                             <p>
-                              <input type="checkbox" id="magazines"/>
+                              <input name="categ" type="checkbox" id="magazines"/>
                               <label for="magazines">Magazines</label>
                             </p>
                         </div>
                         <div class="col s4">
                             <p>
-                              <input type="checkbox" id="thesis"/>
+                              <input name="categ" type="checkbox" id="thesis"/>
                               <label for="thesis">Thesis</label>
                             </p>
                         </div>

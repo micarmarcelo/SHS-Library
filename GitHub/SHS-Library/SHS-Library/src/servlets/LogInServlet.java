@@ -48,15 +48,15 @@ public class LogInServlet extends HttpServlet {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		
-		System.out.println("Username entered:" + email);
+		System.out.println("Email entered:" + email);
 		System.out.println("Password entered:" + password);
 		
 		try {
 			if(UsersService.validateUser(email, password)){
-				Cookie usernameCookie = new Cookie("email", email);
-				usernameCookie.setMaxAge(60*60*24);
-				usernameCookie.setHttpOnly(true);
-				response.addCookie(usernameCookie);
+				Cookie emailCookie = new Cookie("email", email);
+				emailCookie.setMaxAge(60*60*24);
+				emailCookie.setHttpOnly(true);
+				response.addCookie(emailCookie);
 				
 				HttpSession session = request.getSession();
 				
@@ -71,17 +71,25 @@ public class LogInServlet extends HttpServlet {
 					session.setAttribute("lastName", user.getLastName());
 					session.setAttribute("firstName", user.getFirstName());
 					session.setAttribute("emailAddress", user.getEmailAddress());
+					session.setAttribute("type", user.getType());
 				}
 				
 				System.out.println("Log-In::SUCCESS");
+				System.out.println("type:" +user.getType());
 				//session.setAttribute("getAlert", "login");
 				
 				ArrayList<Material> material = MaterialService.getAllMaterials();
-				
 				request.setAttribute("material", material);
 
-				
-				request.getRequestDispatcher("main.jsp").forward(request, response);
+				if(user.getType().equals("admin")){
+					request.getRequestDispatcher("admin.jsp").forward(request, response);
+				}else if(user.getType().equals("manager") || user.getType().equals("staff")){
+					System.out.println("type" +user.getType());
+					request.getRequestDispatcher("library.jsp").forward(request, response);
+				}else if(user.getType().equals("student") || user.getType().equals("employee")){
+					System.out.println("type" +user.getType());
+					request.getRequestDispatcher("main.jsp").forward(request, response);
+				}
 			}
 			else{
 				System.out.println("Log-In::FAILED");

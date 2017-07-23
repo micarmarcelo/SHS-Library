@@ -3,6 +3,8 @@ package servlets;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,16 +16,16 @@ import beans.Material;
 import services.MaterialService;
 
 /**
- * Servlet implementation class SearchServlet
+ * Servlet implementation class FilterServlet
  */
-@WebServlet("/SearchServlet")
-public class SearchServlet extends HttpServlet {
+@WebServlet("/FilterServlet")
+public class FilterServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SearchServlet() {
+    public FilterServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -40,14 +42,32 @@ public class SearchServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ArrayList<Material> materials = new ArrayList<Material>();
+		// TODO Auto-generated method stub
+		doGet(request, response);
 		
+		// search book first
+		// get the string from search button
+		// store result in arraylist
+		// arraylist... 
+		// filter by material service
+		
+		ArrayList<Material> materials = new ArrayList<Material>();
 		String searchInput = request.getParameter("search");
-		System.out.println("FILTER BY: " + request.getParameter("filter"));
+		System.out.println("SEARCH BY: " + request.getParameter("filter"));
 		int filter = Integer.parseInt(request.getParameter("filter"));
 		System.out.println("SEARCH: " + searchInput);
 		System.out.println("FILTER BY: " + filter);
 		String userType = request.getParameter("userType");
+		
+//		String[] categ = request.getParameterValues("categ"); 
+//		List list = Arrays.asList(names); 
+//		request.setAttribute("names", list); 
+//		RequestDispatcher rd = request.getRequestDispatcher("employee.jsp"); 
+//		rd.forward(request, response);
+//		<input type="checkbox" name="checkedRows" value="${idOfCurrentRow}">
+//		In the servlet handling the form submission:
+//
+//		String[] checkedIds = request.getParameterValues("checkedRows");
 		// 1 - Author 2 - Title 3 - Publisher
 		
 		
@@ -70,19 +90,6 @@ public class SearchServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			request.setAttribute("materials", materials);
-//			if(userType.equals(""))
-//			request.getRequestDispatcher("main.jsp").forward(request, response);
-			
-//			if(userType.equals("manager") || userType.equals("staff")){
-//				System.out.println("type, searchservlet this is library jsp" +userType);
-//				request.getRequestDispatcher("library.jsp").forward(request, response);
-//			}else if(userType.equals("student") || userType.equals("employee")){
-//				System.out.println("type" +userType);
-				request.getRequestDispatcher("main.jsp").forward(request, response);
-		//	}
-		
 	}
 
 }

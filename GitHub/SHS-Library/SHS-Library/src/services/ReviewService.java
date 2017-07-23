@@ -30,9 +30,9 @@ public class ReviewService {
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, u.getFirstName());
-			pstmt.setString(2, u.getLastName());
-			pstmt.setString(3, u.getUserID());
+			pstmt.setString(1, "Patrick");
+			pstmt.setString(2, "Arceo");
+			pstmt.setString(3, "1");
 			pstmt.setString(4, m.getMaterialID());
 			pstmt.setInt(5, r.getRating());
 			pstmt.setString(6, r.getMessage());

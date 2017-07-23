@@ -13,8 +13,10 @@ import javax.servlet.http.HttpSession;
 
 import beans.Material;
 import beans.Review;
+import beans.User;
 import services.MaterialService;
 import services.ReviewService;
+import services.UsersService;
 
 /**
  * Servlet implementation class ViewMaterialServlet
@@ -42,18 +44,15 @@ public class ViewMaterialServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Get Event's Info
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {				
 				
 				int materialID = Integer.parseInt(request.getParameter("materialID"));
-				System.out.println(materialID);
-				
 				
 				try {
 					Material material;
 					
 					material = MaterialService.getMaterial(materialID);
-					
+					request.setAttribute("materialID", material.getMaterialID());
 					request.setAttribute("title", material.getTitle());
 					request.setAttribute("author", material.getAuthor());
 					request.setAttribute("publisher", material.getPublisher());
@@ -66,6 +65,25 @@ public class ViewMaterialServlet extends HttpServlet {
 					request.setAttribute("reservationDate", material.getReservationDate());
 					
 					request.setAttribute("material", material);
+					
+					
+					//Get Event's Reviews
+//					ArrayList<Review> reviewList = ReviewService.getAllReviews(Integer.parseInt(request.getParameter(Review.COLUMN_MATERIALID)));
+//					
+//					System.out.println("reviewlist: " + reviewList);
+//					request.setAttribute("reviewList", reviewList);
+					
+					//Get ID and Gender of the currently log in user
+//					HttpSession session = request.getSession();
+//					String email = (String) session.getAttribute(User.COLUMN_EMAILADDRESS);
+//					String userID = (String) session.getAttribute(User.COLUMN_USERID);
+//					
+//					System.out.println("email: " + email);
+//					request.setAttribute("userID", userID);
+//					
+//					
+//					request.setAttribute("email", email);
+//					request.setAttribute("fullName", UsersService.getUsersFullName(userID));
 					request.getRequestDispatcher("material-details.jsp").forward(request, response);
 					
 				} catch (SQLException e) {
@@ -75,21 +93,7 @@ public class ViewMaterialServlet extends HttpServlet {
 				
 				
 				
-//				//Get Event's Reviews
-//				ArrayList<Review> reviewList = ReviewService.getAllReviews(Integer.parseInt(request.getParameter(Review.COLUMN_EVENTID)));
-//				
-//				System.out.println("reviewlist: " + reviewList);
-//				request.setAttribute("reviewList", reviewList);
-//				
-//				//Get ID and Gender of the currently log in user
-//				HttpSession session = request.getSession();
-//				int userID = Integer.parseInt((String)session.getAttribute(RegisteredUser.COLUMN_USERID));
-//				String gender = (String)session.getAttribute(RegisteredUser.COLUMN_GENDER);
-//				
-//				
-//				request.setAttribute("currUserID", userID);
-//				request.setAttribute("currUserGender", gender);
-//				request.setAttribute("fullName", UsersService.getUsersFullName(event.getUserID()));
+				
 				
 	}
 

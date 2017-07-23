@@ -76,7 +76,7 @@ public class RegisterServlet extends HttpServlet {
 			System.out.println("SIGN-UP::SUCCESS");
 			
 			//redirect to homepage
-			request.getRequestDispatcher("main.html").forward(request, response);
+			request.getRequestDispatcher("main.jsp").forward(request, response);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println("LOGIN::FAILED");

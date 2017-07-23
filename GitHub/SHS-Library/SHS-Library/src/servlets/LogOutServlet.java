@@ -1,30 +1,26 @@
 package servlets;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import beans.Material;
-import services.MaterialService;
-
 /**
- * Servlet implementation class ReserveServlet
+ * Servlet implementation class LogOutServlet
  */
-@WebServlet("/ReserveServlet")
-public class ReserveServlet extends HttpServlet {
+@WebServlet("/LogOutServlet")
+public class LogOutServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ReserveServlet() {
+    public LogOutServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,28 +30,30 @@ public class ReserveServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		Cookie[] cookieList = request.getCookies();
+		
+		if(cookieList != null){
+			for(int i = 0; i < cookieList.length; i++){
+				if(cookieList[i].getName().equals("email")){
+					cookieList[i].setMaxAge(0);
+					response.addCookie(cookieList[i]); //override the old cookie
+				}
+			}
+		}
+		
+		HttpSession session = request.getSession();
+		session.invalidate();
+		
+		System.out.println("Successfully killed out a session and cookie!! BUHBYEEEE ");
+		request.getRequestDispatcher("login.jsp").forward(request,response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Get Event's Info
-				System.out.println(request.getParameter(Material.COLUMN_MATERIALID));
-				
-				int materialID = Integer.parseInt(request.getParameter("materialID"));
-				
-				try {
-					MaterialService.reserveMaterial(materialID);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				
-				request.getRequestDispatcher("main.jsp").forward(request, response);
-		
+		// TODO Auto-generated method stub
+
 	}
 
 }

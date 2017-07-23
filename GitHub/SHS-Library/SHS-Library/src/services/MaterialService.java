@@ -15,27 +15,29 @@ public class MaterialService {
 /**	INSERT INTO materials(location, author, publisher, year, tags, 
 		status, availabilityDate) VALUES() **/
 		
-		String sql = "INSERT INTO " + Material.TABLE_NAME + " (" + Material.COLUMN_LOCATION
-				+ Material.COLUMN_AUTHOR + ", " + Material.COLUMN_PUBLISHER + ", "
-				+ Material.COLUMN_YEAR + ", " + Material.COLUMN_TAGS + ", " 
+		String sql = "INSERT INTO " + Material.TABLE_NAME + " (" + Material.COLUMN_TITLE + ", "
+				+ Material.COLUMN_LOCATION + ", "+ Material.COLUMN_AUTHOR + ", " 
+				+ Material.COLUMN_PUBLISHER + ", "	+ Material.COLUMN_YEAR + ", " 
+				+ Material.COLUMN_TAGS + ", " 
 				+ Material.COLUMN_STATUS + ", " + Material.COLUMN_AVAILDATE + ") "
-				+ "VALUES (?,?,?,?,?,?,?);";
+				+ "VALUES (?,?,?,?,?,?,?, CURDATE());";
 		
 		Connection conn = DBPool1.getInstance().getConnection();
 		PreparedStatement pstmt = null;
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, m.getLocation());
-			pstmt.setString(2, m.getAuthor());
-			pstmt.setString(3,  m.getPublisher());
-			pstmt.setString(4,  m.getYear());
-			pstmt.setString(5,  m.getTags());
-			pstmt.setString(6,  m.getStatus());
-			pstmt.setString(7, m.getAvailableDate());
+			pstmt.setString(1, m.getTitle());
+			pstmt.setString(2, m.getLocation());
+			pstmt.setString(3, m.getAuthor());
+			pstmt.setString(4,  m.getPublisher());
+			pstmt.setString(5,  m.getYear());
+			pstmt.setString(6,  m.getTags());
+			pstmt.setString(7,  m.getStatus());
+			
 			pstmt.executeUpdate();
 			
-			System.out.println("ADVERTISE EVENT SERVICE::SUCCESS!");
+			System.out.println("ADD MATERIAL SERVICE::SUCCESS!");
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -243,7 +245,7 @@ public class MaterialService {
 	public static ArrayList<Material> getAllMaterials() throws SQLException{
 		ArrayList<Material> materials = new ArrayList<Material>();
 		
-		String sql = "SELECT * FROM " + Material.TABLE_NAME + " LIMIT 10";
+		String sql = "SELECT * FROM " + Material.TABLE_NAME + " ORDER BY " + Material.COLUMN_MATERIALID + " desc;";
 		
 		Connection conn = DBPool1.getInstance().getConnection();
 		PreparedStatement pstmt = null;
@@ -255,6 +257,7 @@ public class MaterialService {
 			
 			while(rs.next()){
 				Material material = new Material();
+				material.setMaterialID(rs.getString(Material.COLUMN_MATERIALID));
 				material.setTitle(rs.getString(Material.COLUMN_TITLE));
 				material.setLocation(rs.getString(Material.COLUMN_LOCATION));
 				material.setAuthor(rs.getString(Material.COLUMN_AUTHOR));
@@ -303,6 +306,7 @@ public class MaterialService {
 			
 			while(rs.next()){
 				Material material = new Material();
+				material.setMaterialID(rs.getString(Material.COLUMN_MATERIALID));
 				material.setTitle(rs.getString(Material.COLUMN_TITLE));
 				material.setLocation(rs.getString(Material.COLUMN_LOCATION));
 				material.setAuthor(rs.getString(Material.COLUMN_AUTHOR));
@@ -349,6 +353,7 @@ public class MaterialService {
 			
 			while(rs.next()){
 				Material material = new Material();
+				material.setMaterialID(rs.getString(Material.COLUMN_MATERIALID));
 				material.setTitle(rs.getString(Material.COLUMN_TITLE));
 				material.setLocation(rs.getString(Material.COLUMN_LOCATION));
 				material.setAuthor(rs.getString(Material.COLUMN_AUTHOR));
@@ -395,6 +400,7 @@ public class MaterialService {
 			
 			while(rs.next()){
 				Material material = new Material();
+				material.setMaterialID(rs.getString(Material.COLUMN_MATERIALID));
 				material.setTitle(rs.getString(Material.COLUMN_TITLE));
 				material.setLocation(rs.getString(Material.COLUMN_LOCATION));
 				material.setAuthor(rs.getString(Material.COLUMN_AUTHOR));
@@ -443,6 +449,7 @@ public class MaterialService {
 			
 			while(rs.next()){
 				Material material = new Material();
+				material.setMaterialID(rs.getString(Material.COLUMN_MATERIALID));
 				material.setTitle(rs.getString(Material.COLUMN_TITLE));
 				material.setLocation(rs.getString(Material.COLUMN_LOCATION));
 				material.setAuthor(rs.getString(Material.COLUMN_AUTHOR));
@@ -491,6 +498,7 @@ public class MaterialService {
 			
 			while(rs.next()){
 				Material material = new Material();
+				material.setMaterialID(rs.getString(Material.COLUMN_MATERIALID));
 				material.setTitle(rs.getString(Material.COLUMN_TITLE));
 				material.setLocation(rs.getString(Material.COLUMN_LOCATION));
 				material.setAuthor(rs.getString(Material.COLUMN_AUTHOR));
@@ -539,6 +547,7 @@ public class MaterialService {
 			
 			while(rs.next()){
 				Material material = new Material();
+				material.setMaterialID(rs.getString(Material.COLUMN_MATERIALID));
 				material.setTitle(rs.getString(Material.COLUMN_TITLE));
 				material.setLocation(rs.getString(Material.COLUMN_LOCATION));
 				material.setAuthor(rs.getString(Material.COLUMN_AUTHOR));

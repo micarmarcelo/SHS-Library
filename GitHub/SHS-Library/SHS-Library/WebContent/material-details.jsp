@@ -68,18 +68,22 @@
                             <p class=""><b>Magazine</b></p>
                         </div>
                         <div class="col s7">
-                            <a id="item2"><b>${material.title }</b></a>
+                         
+                        
+                        	
+                            <a id=${material.title }><b>${material.title }</b></a>
                             <p><b>Author/s: </b>${material.author}</p>
-                            <p><b>Publisher/s: </b>Travolta, John</p>
+                            <p><b>Publisher/s: </b>${material.publisher}</p>
                             <p><b>Year: </b>2013</p>
                             <br>
-                            <p><b>Location: </b><i>123.456; A123c</i></p>
-                            <p><b>Tags: </b> <i>feature writing, journalism</i></p>
+                            <p><b>Location: </b><i>${material.location }</i></p>
+                            <p><b>Tags: </b> <i> ${material.tags }</i></p>
                           <span style="display: flex;">
                             <p><b>Status: &nbsp;</b></p> 
-                            <p id="status" style="color: red;"><b>Not Available</b></p>
+                            <p id="status" style="color: red;"><b>${material.status}</b></p>
+                            
                           </span>
-                          <p><b>Date of Availability: </b>July 19, 2017</p>
+                          <p><b>Date of Availability: </b><i>${material.availableDate}</i></p>
                         </div>
                         <div class="col s4">
                             <a class="waves-effect waves-light btn" href="#reserve-modal">Reserve</a>
@@ -109,20 +113,27 @@
             <div class="modal-content">
               <h4>Review Material</h4>
               <div class="row">
-                <form class="col s12">
+                <form class="col s12" action="ReviewServlet" method="POST">
                   <div class="row">
                     <div class="input-field col s12">
-                      <textarea id="textarea1" class="materialize-textarea"></textarea>
+                      <textarea id="textarea1" name="message" class="materialize-textarea"></textarea>
+                      <input type="hidden" name="materialID" value="${material.materialID}">
+                      <input name = "email" type="hidden" value= "${email}"/>
+                      
                       <label for="textarea1">Write a review</label>
                     </div>
                   </div>
+                  
+                  <div class="modal-footer">
+		              <button class="modal-action modal-close waves-effect waves-green btn-flat" type="submit" name="action">OK</button>
+		                <button class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</button>
+		            </div>
+		            
+		           
                 </form>
               </div>
             </div>
-            <div class="modal-footer">
-              <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">OK</a>
-                <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-            </div>
+            
           </div>
         
         
