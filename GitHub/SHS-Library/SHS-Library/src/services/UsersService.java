@@ -462,6 +462,7 @@ public class UsersService {
 		
 	}
 	
+	
 	public static String getUsersFullName(String userID) throws SQLException{
 		String fullName = "";
 		
@@ -497,5 +498,76 @@ public class UsersService {
 		
 		
 		return fullName;
+	}
+	
+	public static boolean checkPasswordIfUnique(String password) throws SQLException{
+		boolean isUnique = false;
+		//SELECT userid
+		//FROM users
+		//WHERE password = ?
+		
+		String sql = "SELECT " + User.COLUMN_USERID + " FROM " + User.TABLE_NAME 
+				+ " WHERE " + User.COLUMN_PASSWORD + " = ?";
+		
+		Connection conn = DBPool1.getInstance().getConnection();
+		PreparedStatement pstat = null;
+		ResultSet rs = null;
+		
+		try {
+			pstat = conn.prepareStatement(sql);
+			pstat.setString(1, password);
+			
+			rs = pstat.executeQuery();
+			
+			if(rs.next() == false){
+				isUnique = true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			try {
+				pstat.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return isUnique;
+	}
+	
+	public static boolean changePassword(String email, String password) throws SQLException{
+		boolean isUpdateSuccess = false;
+		
+		String sql = "UPDATE "+ User.TABLE_NAME + " SET " + User.COLUMN_PASSWORD 
+					+ "=? WHERE " + User.COLUMN_EMAILADDRESS + "= ?";
+		
+		Connection conn = DBPool1.getInstance().getConnection();
+		PreparedStatement pstat = null;
+		
+		try {
+			pstat = conn.prepareStatement(sql);
+			pstat.setString(1, password);
+			pstat.setString(2, email);
+			
+			pstat.executeUpdate();
+			
+			System.out.println("UPDATE IN DB::SUCCESS!");
+			isUpdateSuccess = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			try {
+				pstat.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return isUpdateSuccess;
 	}
 }

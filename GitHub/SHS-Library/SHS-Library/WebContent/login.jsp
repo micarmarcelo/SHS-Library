@@ -35,7 +35,7 @@
                 
                 <br><br>
                 
-                <a href="registration.jsp" class="btn waves-effect waves-green btn-register">Register Here</a>
+                <a href="register.jsp" class="btn waves-effect waves-green btn-register">Register Here</a>
                <!--  <button  name="action">Register Here</button> -->
                 
             </div>
