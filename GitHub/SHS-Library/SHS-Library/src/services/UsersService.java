@@ -43,8 +43,8 @@ public class UsersService {
 				  User.COLUMN_PASSWORD + "," + User.COLUMN_EMAILADDRESS + "," +
 				  User.COLUMN_SECQ1 + "," + User.COLUMN_SECQ2  + "," +
 				  User.COLUMN_ANSQ1 + "," + User.COLUMN_ANSQ2  + "," +
-				  User.COLUMN_BIRTHDAY
-				  +")" + " VALUES(?,?,?,?,?,?,?,?,?,?,?,?);";
+				  User.COLUMN_BIRTHDAY + "," + User.COLUMN_STATUS
+				  +")" + " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?);";
 		
 		PreparedStatement pstmt = null;
 		Connection con = DBPool1.getInstance().getConnection();
@@ -63,8 +63,8 @@ public class UsersService {
 			pstmt.setString(10, u.getAnswerQ1());
 			pstmt.setString(11, u.getAnswerQ2());
 			pstmt.setString(12, u.getBirthday());
+			pstmt.setString(13, u.getStatus());
 
-			
 			pstmt.executeUpdate();
 			System.out.println("User is added succesfully in DB!!!");
 		} catch (SQLException e) {
@@ -220,45 +220,113 @@ public class UsersService {
 		return user;
 	}
 	
-	public static User getUser(String email) throws SQLException{
-	User user = null;
-	
-	String sql = "SELECT * FROM " + User.TABLE_NAME + " WHERE " + User.COLUMN_EMAILADDRESS
-				 + " = '" + email + "'";
-	
-	Connection conn = DBPool1.getInstance().getConnection();
-	PreparedStatement pstat = null;
-	ResultSet rs = null;
-	
-	try {
-		pstat = conn.prepareStatement(sql);
-		rs = pstat.executeQuery();
+	public static boolean isExisting(String email) throws SQLException{
 		
-		while(rs.next()){
-			user = new User();
-			user.setUserID(rs.getString(User.COLUMN_USERID));
-			user.setPassword(rs.getString(User.COLUMN_PASSWORD));
-			user.setLastName(rs.getString(User.COLUMN_LASTNAME));
-			user.setFirstName(rs.getString(User.COLUMN_FIRSTNAME));
-			user.setEmailAddress(rs.getString(User.COLUMN_EMAILADDRESS));
-			user.setType(rs.getString(User.COLUMN_USERTYPE));
+		String sql = "SELECT * FROM " + User.TABLE_NAME + " WHERE " + 
+						 User.COLUMN_EMAILADDRESS + " = '" + email + "'";
+		
+		Connection conn = DBPool1.getInstance().getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int idMember = 0;
+		try{
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()){
+				idMember = Integer.parseInt(rs.getString(User.COLUMN_USERID));
+			}
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally{
+			try{
+				pstmt.close();
+				conn.close();
+				rs.close();
+			} catch(SQLException e){
+				e.printStackTrace();
+			}
 		}
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}finally{
+		
+		if(idMember==0)
+			return false;
+		else
+			return true;	
+	}
+	
+	public static User getUser(String email) throws SQLException{
+		User user = null;
+		
+		String sql = "SELECT * FROM " + User.TABLE_NAME + " WHERE " + User.COLUMN_EMAILADDRESS
+					 + " = '" + email + "'";
+		
+		Connection conn = DBPool1.getInstance().getConnection();
+		PreparedStatement pstat = null;
+		ResultSet rs = null;
+		
 		try {
-			pstat.close();
-			conn.close();
-			rs.close();
+			pstat = conn.prepareStatement(sql);
+			rs = pstat.executeQuery();
+			
+			while(rs.next()){
+				user = new User();
+				user.setUserID(rs.getString(User.COLUMN_USERID));
+				user.setPassword(rs.getString(User.COLUMN_PASSWORD));
+				user.setLastName(rs.getString(User.COLUMN_LASTNAME));
+				user.setFirstName(rs.getString(User.COLUMN_FIRSTNAME));
+				user.setEmailAddress(rs.getString(User.COLUMN_EMAILADDRESS));
+				user.setType(rs.getString(User.COLUMN_USERTYPE));
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			try {
+				pstat.close();
+				conn.close();
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+	
+		return user;
 	}
-
-	return user;
-}
+	
+	public static String validateUserbyEmail(String email) throws SQLException{
+		String password = "";
+		
+		String sql = "SELECT password FROM user where email = ?";
+		
+		Connection conn = DBPool1.getInstance().getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, email);
+			rs = pstmt.executeQuery();
+			while(rs.next()){
+				password = rs.getString(User.COLUMN_PASSWORD);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			
+			try {
+				pstmt.close();
+				conn.close();
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return password;
+	}
 	/****** PUBIES WERRRK 
 //	 * @throws SQLException ******/
 //	public static User getUser(String emailAdd) throws SQLException{

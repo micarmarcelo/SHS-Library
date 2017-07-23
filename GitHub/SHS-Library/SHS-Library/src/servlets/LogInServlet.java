@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import beans.AESencrp;
 import beans.Material;
 import beans.User;
 import services.MaterialService;
@@ -44,7 +45,7 @@ public class LogInServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+		String decryptedPassword = null;
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		
@@ -52,7 +53,15 @@ public class LogInServlet extends HttpServlet {
 		System.out.println("Password entered:" + password);
 		
 		try {
-			if(UsersService.validateUser(email, password)){
+			decryptedPassword = AESencrp.decrypt(UsersService.validateUserbyEmail(email));
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
+			
+			if(password != null && password.equals(decryptedPassword)){
 				Cookie emailCookie = new Cookie("email", email);
 				emailCookie.setMaxAge(60*60*24);
 				emailCookie.setHttpOnly(true);
@@ -93,6 +102,7 @@ public class LogInServlet extends HttpServlet {
 			}
 			else{
 				System.out.println("Log-In::FAILED");
+				request.setAttribute("errorMessage","Invalid username or password.");
 				request.getRequestDispatcher("login.jsp").forward(request,response);
 			}
 		} catch (SQLException e) {

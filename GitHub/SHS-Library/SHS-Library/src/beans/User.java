@@ -20,6 +20,7 @@ public class User {
 	public static final int COLUMN_SECQ2ID = 2;
 	public static final String COLUMN_ANSQ1 = "answer_question1";
 	public static final String COLUMN_ANSQ2 = "answer_question2";
+	public static final String COLUMN_STATUS = "status";
 	
 	private String userID;
 	private String type;
@@ -39,6 +40,7 @@ public class User {
 	private String reserveIDs;
 	private ArrayList<Review> reviews;
 	private ArrayList<Integer> materialHistory;
+	private String status;
 	
 	
 	public User(String firstName, String middleInitial, String lastName, String password, String emailAddress,
@@ -56,7 +58,16 @@ public class User {
 		this.answerQ1 = answerQ1;
 		this.answerQ2 = answerQ2;
 		this.type = type;
+		this.status = status;
 		
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public User(){}

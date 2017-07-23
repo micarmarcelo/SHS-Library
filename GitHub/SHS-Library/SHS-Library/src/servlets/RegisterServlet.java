@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import beans.AESencrp;
 import beans.User;
 import services.UsersService;
 
@@ -57,11 +58,31 @@ public class RegisterServlet extends HttpServlet {
 			user.setSecurityQ2(Integer.parseInt(request.getParameter(User.COLUMN_SECQ2)));
 			user.setAnswerQ1(request.getParameter(User.COLUMN_ANSQ1));
 			user.setAnswerQ2(request.getParameter(User.COLUMN_ANSQ2));
+			user.setStatus(request.getParameter(User.COLUMN_STATUS));
 
-			UsersService.registerUser(user);
+			String password = request.getParameter(User.COLUMN_PASSWORD);
+			
+						
+			//Encrypt the password
+			try {
+				System.out.println("ENCRYPT!");
+				user.setPassword(AESencrp.encrypt(password));
+				System.out.println("Encryption success!");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println("Encryption failed!");
+			}
+			
+			//Check if username and email is already registered
+			if(UsersService.isExisting(user.getEmailAddress()) == false){
+				UsersService.registerUser(user);
+				System.out.println("USER REGISTERED!!" + user.getEsNumber());
+			}
+			
+			
 			User newUser = UsersService.getUser(user.getEmailAddress());
-			
-			
+
 			//make a session
 			HttpSession session = request.getSession();
 			session.setAttribute("email", newUser.getEmailAddress());
